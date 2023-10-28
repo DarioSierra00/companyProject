@@ -9,52 +9,62 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Listado Company</title>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"> 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
-	<%
+<%
 	ArrayList<Company> result = null;
+	ArrayList<CompanyProject> result2 = null;
 			try{
 				result = (ArrayList<Company>) DbRepository.findAll(Company.class);
-			}catch(Exception e){
-		
-			}
+				result2 = (ArrayList<CompanyProject>) DbRepository.findAll(CompanyProject.class);
+			
+	
 	%>
-
 	<table class="table">
 		<thead>
 			<tr>
-				<th scope="col">Id</th>
 				<th scope="col">Nombre</th>
-				<th scope="col">Direccion</th>
-				<th scope="col">Ciudad</th>
-				<th scope="col">Empleados</th>
+				<th scope="col">Num empleados</th>
+				<th scope="col">Num proyectos</th>
 			</tr>
 		</thead>
 		<%
 		for (Company c: result){
 		%>
 				<tr>
-					<td><%=c.getId()%></td>
 					<td><%=c.getName()%></td>
-					<td><%=c.getAddress()%></td>
-					<td><%=c.getCity()%></td>
-					<td><table class="table">
+					<td><%=c.getEmployees().size()%></td>
+					<td><%=c.getCompanyProject().size()%></td>
+					<tr>
+					<table class="table">
+					<td><b>Empleados</b></td></tr>
 						<%
 							for (Employee e: c.getEmpleados()){
 						%>
 						<tr>
-						<td>
-							<%=e.getFirstName()%>
-						</td>
-						<tr>
+						<td><%=e.getFirstName()%></td>
+						<td><%=e.getLastName()%></td>
 						<%}%>
+						<tr><td><b>Proyectos</b></td></tr>
+						<%
+							for(CompanyProject cp : c.getCompanyProject()){
+								%>
+								<tr>
+								<td><%=cp.getProject().getName()%></td>
+								<td><%=cp.getProject().getBudget()%></td>
+								<%}%>
+						
 					</table>	
 					<td>
 		<%}%>			
 	</table>
+	<%}catch(Exception e){
+		%><h1>Error al conectar con la base de datos</h1>
+		
+	<% } %>
 </body>
 </html>

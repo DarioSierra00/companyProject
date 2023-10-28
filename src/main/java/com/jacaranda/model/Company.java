@@ -18,50 +18,81 @@ public class Company {
 	private String city;
 	
 	@OneToMany(mappedBy="company")
-	private List<Employee> listEmployee;
+	private List<Employee> Employees;
 	
 	@OneToMany(mappedBy="company")
 	private List<CompanyProject> companyProject;
 	
-	public Company() {
-		super();
-	}
-	
-	public Company(int id, String name, String address, String city) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.address = address;
-		this.city = city;
-	}
 	public int getId() {
 		return id;
 	}
+
+
 	public void setId(int id) {
 		this.id = id;
 	}
+
+
 	public String getName() {
 		return name;
 	}
+
+
 	public void setName(String name) {
 		this.name = name;
 	}
+
+
 	public String getAddress() {
 		return address;
 	}
+
+
 	public void setAddress(String address) {
 		this.address = address;
 	}
+
+
 	public String getCity() {
 		return city;
 	}
+
+
 	public void setCity(String city) {
 		this.city = city;
 	}
+	
+	public List<Employee> getEmpleados(){
+		return Employees;
+	}
+
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
 	}
+
+
+	public List<Employee> getEmployees() {
+		return Employees;
+	}
+
+
+	public void setEmployees(List<Employee> employees) {
+		Employees = employees;
+	}
+
+
+	public List<CompanyProject> getCompanyProject() {
+		return companyProject;
+	}
+
+
+	public void setCompanyProject(List<CompanyProject> companyProject) {
+		this.companyProject = companyProject;
+	}
+
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -73,13 +104,7 @@ public class Company {
 		Company other = (Company) obj;
 		return id == other.id;
 	}
-	public List<Employee> getListEmployee() {
-		return listEmployee;
-	}
 
-	public void setListEmployee(List<Employee> listEmployee) {
-		this.listEmployee = listEmployee;
-	}
 
 	@Override
 	public String toString() {
@@ -87,4 +112,5 @@ public class Company {
 	}
 	
 	
+
 }

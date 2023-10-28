@@ -14,7 +14,7 @@ public class Project {
 	@Id
 	private int id;
 	private String name;
-	private String budget;
+	private String butget;
 	
 	@OneToMany(mappedBy="project")
 	private List<CompanyProject> companyProject;
@@ -23,7 +23,7 @@ public class Project {
 		super();
 		this.id = id;
 		this.name = name;
-		this.budget = budget;
+		this.butget = budget;
 	}
 	public Project() {
 		super();
@@ -41,10 +41,10 @@ public class Project {
 		this.name = name;
 	}
 	public String getBudget() {
-		return budget;
+		return butget;
 	}
 	public void setBudget(String budget) {
-		this.budget = budget;
+		this.butget = budget;
 	}
 	@Override
 	public int hashCode() {
