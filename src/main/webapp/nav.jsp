@@ -14,9 +14,9 @@
         <a class=" nav-link" href="./companyList.jsp">List Company</a>
         <a class=" nav-link" href="./listCompanyProject.jsp">List CompanyProject</a>
         <a class=" nav-link" href="./addEmployee.jsp">Add Employee</a>
+        <a class=" nav-link" href="./addCompanyProject.jsp">Add CompanyProject</a>
       </div>
     </div>
-  </div>
 </nav>
 </body>
 </html>

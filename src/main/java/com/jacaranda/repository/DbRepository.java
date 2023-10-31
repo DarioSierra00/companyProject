@@ -44,7 +44,7 @@ public class DbRepository {
 		return result;
 	}
 	
-	public static <T> void addEmployee(T T) { 
+	public static <T> void addEntity(T T) { 
 		Transaction transaction = null; 
 		Session session = DbUtility.getSessionFactory().openSession(); 
 		transaction = (Transaction) session.beginTransaction(); 
@@ -59,7 +59,7 @@ public class DbRepository {
 		session.close(); 
 	
 }
-	public static <T> void editEmployee(T T) { 
+	public static <T> void editEntity(T T) { 
 		Transaction transaction = null; 
 		Session session = DbUtility.getSessionFactory().openSession(); 
 		transaction = (Transaction) session.beginTransaction(); 
@@ -74,4 +74,25 @@ public class DbRepository {
 		session.close(); 
 	
 }
+	
+	public static <T> void deleteEntity(Class<T> t,int id) { 
+		T result = null;
+		Transaction transaction = null; 
+		Session session = DbUtility.getSessionFactory().openSession(); 
+		
+		SelectionQuery<T> q =
+				session.createSelectionQuery("From " + t.getName() + " where id = :id",t);
+				q.setParameter("id", id); 
+				List<T> entity = q.getResultList(); 
+				if(entity.size() != 0) { 
+					transaction = (Transaction) session.beginTransaction(); 
+					result = entity.get(0);
+					session.remove(result); 
+					transaction.commit(); 
+					session.close();
+				}
+				
+	}
+	
+	
 }

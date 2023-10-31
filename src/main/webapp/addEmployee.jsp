@@ -98,7 +98,7 @@
 			
 			Company c = DbRepository.find(Company.class, id);
 			Employee e = new Employee(name,lastName,email,gender,date,c);
-			DbRepository.addEmployee(e);
+			DbRepository.addEntity(e);
 		}
 		
 	}catch(Exception e){

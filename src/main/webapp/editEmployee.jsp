@@ -19,57 +19,97 @@
 <body>
 <%@include file="nav.jsp" %>
 <%
+	Employee e = null;
 	Employee emp = null;
 	ArrayList<Company> result = null;
-	String name = null;
-	String lastName = null;
-	String email = null;
-	String gender = null;
-	Date date = null;
+	try{
+		result = (ArrayList<Company>) DbRepository.findAll(Company.class);
+	}catch(Exception e1){
+		response.sendRedirect("error.jsp?msg="+ e1.getMessage());
+		return;
+	}
 	
 	try{
 		emp = DbRepository.find(Employee.class, Integer.valueOf(request.getParameter("id")));
-		name = emp.getFirstName();
-		lastName = emp.getLastName();
-		email = emp.getEmail();
-		gender = emp.getGender();
-		date = emp.getDateOfBirth();
-	}catch(Exception e){
-		response.sendRedirect("error.jsp?msg= No se encuentra al empleado");
+	}catch(Exception e2){
+		response.sendRedirect("error.jsp?msg="+ e2.getMessage());
+		return;
+	}
+	if(request.getParameter("submit") != null){
+		try{
+			String name = request.getParameter("firstName");
+			String lastName = request.getParameter("lastName");
+			String email = request.getParameter("email");
+			String gender = request.getParameter("gender");
+			int id = 0;
+			
+			try{
+				id = Integer.valueOf(request.getParameter("nameCompany"));
+			}catch(Exception e3){
+				response.sendRedirect("error.jsp?msg= Id de compañia incorrecto");
+				return;
+			}
+			Date date;
+			
+			try{
+				date = Date.valueOf(request.getParameter("date"));
+			}catch(Exception e4){
+				response.sendRedirect("error.jsp?msg= Fecha erronea formato adecuado : yyyy-mm-dd");
+				return;
+			}
+			
+			Company c = DbRepository.find(Company.class,id);
+			e = new Employee(Integer.valueOf(request.getParameter("id")),name,lastName,email,gender,date,c);
+		}catch(Exception e5){
+			response.sendRedirect("error.jsp?msg="+ e5.getMessage());
+			return;
+		}
+		DbRepository.editEntity(e);
+	}
+	try{
+		
+	}catch(Exception e6){
+		response.sendRedirect("error.jsp?msg= Id de compañia no correcto");
 		return;
 	}
 
 %>
 	<div class="mainWrap">
 <form>
+       <div class="form-group row">
+    <label for="text1" class="col-4 col-form-label">First name</label> 
+    <div class="col-8">
+      <input id="id" name="id" type="text" class="form-control" value="<%=request.getParameter("id")%>" hidden>
+    </div>
+  </div>
   <div class="form-group row">
     <label for="text1" class="col-4 col-form-label">First name</label> 
     <div class="col-8">
-      <input id="firstName" name="firstName" type="text" class="form-control" value="<%=name %>" required>
+      <input id="firstName" name="firstName" type="text" class="form-control" value="<%=emp.getFirstName() %>" required>
     </div>
   </div>
   <div class="form-group row">
     <label for="text2" class="col-4 col-form-label">Last name</label> 
     <div class="col-8">
-      <input id="lastName" name="lastName" type="text" class="form-control" value="<%=lastName %>" required>
+      <input id="lastName" name="lastName" type="text" class="form-control" value="<%=emp.getLastName() %>" required>
     </div>
   </div>
   <div class="form-group row">
     <label for="text3" class="col-4 col-form-label">Email</label> 
     <div class="col-8">
-      <input id="email" name="email" type="text" class="form-control" value="<%=email %>">
+      <input id="email" name="email" type="text" class="form-control" value="<%=emp.getEmail() %>">
     </div>
   </div>
   <div class="form-group row">
     <label for="text4" class="col-4 col-form-label">Gender</label> 
     <div class="col-8">
-      <input id="gender" name="gender" type="text" class="form-control" value="<%=gender %>">
+      <input id="gender" name="gender" type="text" class="form-control" value="<%=emp.getGender() %>">
     </div>
   </div>
   <div class="form-group row">
     <label for="text5" class="col-4 col-form-label">DateOfBirth</label> 
     <div class="col-8">
-      <input id="date" name="date" type="date" class="form-control" value="<%=date %>">
+      <input id="date" name="date" type="date" class="form-control" value="<%=emp.getDateOfBirth() %>">
     </div>
   </div>
   <div class="form-group row">
@@ -77,9 +117,14 @@
     <select name="nameCompany">
     <%
     	for(Company c : result){
-    	
-    %>		<option name="company" value="<%=c.getId()%>"><%=c.getName()%></option>
-    	<% }
+    		if(c.getId() == emp.getCompany().getId()){
+    %>		<option value="<%=c.getId() %>" selected><%=c.getName()%></option>
+    	<% 	}
+    		else{
+    		%>
+    		<option><%=c.getName() %></option>
+    		<% 
+    	 }}
     %>
     	
     </select>
@@ -92,27 +137,5 @@
   </div>
 </form>
 </div>
-
-	<%
-	try{
-		if(request.getParameter("submit") != null){
-			try{
-				date = Date.valueOf(request.getParameter("date"));
-			}catch(Exception e){
-				response.sendRedirect("error.jsp?msg=Error en la fecha introducida");
-				return;
-			}
-			int id = Integer.valueOf(request.getParameter("nameCompany"));
-			
-			Company c = DbRepository.find(Company.class, id);
-			Employee e = new Employee(name,lastName,email,gender,date,c);
-			DbRepository.editEmployee(e);
-		}}
-		
-		catch(Exception e){
-			response.sendRedirect("error.jsp?msg="+ e.getMessage());
-			return;
-		}
-	%>
 </body>
 </html>

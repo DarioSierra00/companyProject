@@ -41,6 +41,8 @@
 				<td><%=e.getGender() %></td>
 				<td><%=e.getDateOfBirth() %></td>
 				<td><%=e.getCompany().getName()%></td>
+				<td><a href="editEmployee.jsp?id=<%=e.getId()%>"><button type="button">Edit</button></a></td>
+				<td><a href="deleteEmployee.jsp?id=<%=e.getId()%>"><button type="button">Delete</button></a></td>
 				</tr>
 	<% }%>
 </table>
