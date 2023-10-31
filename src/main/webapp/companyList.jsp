@@ -15,12 +15,14 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
+<%@include file="nav.jsp" %>
 	<%
 	ArrayList<Company> result = null;
 			try{
 				result = (ArrayList<Company>) DbRepository.findAll(Company.class);
 			}catch(Exception e){
-		
+				response.sendRedirect("error.jsp?msg="+ e.getMessage());
+				return;
 			}
 	%>
 

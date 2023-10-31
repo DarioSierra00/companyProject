@@ -59,18 +59,19 @@ public class DbRepository {
 		session.close(); 
 	
 }
-	
-	public static Company getCompany(String name) {
-		Company result = null; 
+	public static <T> void editEmployee(T T) { 
+		Transaction transaction = null; 
 		Session session = DbUtility.getSessionFactory().openSession(); 
+		transaction = (Transaction) session.beginTransaction(); 
 		
-		SelectionQuery<Company> q =
-				session.createSelectionQuery("From Company where name = :name", Company.class);
-				q.setParameter("name", name); 
-				List<Company> company = q.getResultList(); 
-				if(company.size() != 0) { 
-					result = company.get(0); 
-				}
-				return result; 
-	}
+		try {
+			session.merge(T); 
+			transaction.commit(); 
+		} catch (Exception e) {
+			System.out.println("Error al añadir");
+			transaction.rollback(); 
+		}
+		session.close(); 
+	
+}
 }

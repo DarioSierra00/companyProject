@@ -15,6 +15,7 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
+<%@include file="nav.jsp" %>
 <%
 	ArrayList<Company> result = null;
 	ArrayList<CompanyProject> result2 = null;
@@ -63,8 +64,9 @@
 		<%}%>			
 	</table>
 	<%}catch(Exception e){
-		%><h1>Error al conectar con la base de datos</h1>
+		response.sendRedirect("error.jsp?msg="+ e.getMessage());
+		return;
 		
-	<% } %>
+	 } %>
 </body>
 </html>

@@ -1,12 +1,12 @@
-<%@page import="com.jacaranda.model.CompanyProject"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    <%@page import="com.jacaranda.model.CompanyProject"%>
 <%@page import="com.jacaranda.model.Employee"%>
 <%@page import="com.jacaranda.model.Company"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
 <%@page import="com.jacaranda.repository.DbRepository"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-    <%@ page import = "java.sql.Date" %>
+<%@ page import = "java.sql.Date" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,44 +19,57 @@
 <body>
 <%@include file="nav.jsp" %>
 <%
+	Employee emp = null;
 	ArrayList<Company> result = null;
+	String name = null;
+	String lastName = null;
+	String email = null;
+	String gender = null;
+	Date date = null;
+	
 	try{
-		result = (ArrayList<Company>) DbRepository.findAll(Company.class);
+		emp = DbRepository.find(Employee.class, Integer.valueOf(request.getParameter("id")));
+		name = emp.getFirstName();
+		lastName = emp.getLastName();
+		email = emp.getEmail();
+		gender = emp.getGender();
+		date = emp.getDateOfBirth();
 	}catch(Exception e){
-		response.sendRedirect("error.jsp?msg="+ e.getMessage());
+		response.sendRedirect("error.jsp?msg= No se encuentra al empleado");
 		return;
 	}
+
 %>
-<div class="mainWrap">
+	<div class="mainWrap">
 <form>
   <div class="form-group row">
     <label for="text1" class="col-4 col-form-label">First name</label> 
     <div class="col-8">
-      <input id="firstName" name="firstName" type="text" class="form-control" required>
+      <input id="firstName" name="firstName" type="text" class="form-control" value="<%=name %>" required>
     </div>
   </div>
   <div class="form-group row">
     <label for="text2" class="col-4 col-form-label">Last name</label> 
     <div class="col-8">
-      <input id="lastName" name="lastName" type="text" class="form-control" required>
+      <input id="lastName" name="lastName" type="text" class="form-control" value="<%=lastName %>" required>
     </div>
   </div>
   <div class="form-group row">
     <label for="text3" class="col-4 col-form-label">Email</label> 
     <div class="col-8">
-      <input id="email" name="email" type="text" class="form-control">
+      <input id="email" name="email" type="text" class="form-control" value="<%=email %>">
     </div>
   </div>
   <div class="form-group row">
     <label for="text4" class="col-4 col-form-label">Gender</label> 
     <div class="col-8">
-      <input id="gender" name="gender" type="text" class="form-control">
+      <input id="gender" name="gender" type="text" class="form-control" value="<%=gender %>">
     </div>
   </div>
   <div class="form-group row">
     <label for="text5" class="col-4 col-form-label">DateOfBirth</label> 
     <div class="col-8">
-      <input id="date" name="date" type="date" class="form-control">
+      <input id="date" name="date" type="date" class="form-control" value="<%=date %>">
     </div>
   </div>
   <div class="form-group row">
@@ -74,7 +87,7 @@
   	
   <div class="form-group row">
     <div class="offset-4 col-8">
-      <button name="submit" type="submit" class="btn btn-success">Añadir empleado</button>
+      <button name="submit" type="submit" class="btn btn-success">Editar empleado</button>
     </div>
   </div>
 </form>
@@ -83,11 +96,6 @@
 	<%
 	try{
 		if(request.getParameter("submit") != null){
-			String name = request.getParameter("firstName");
-			String lastName = request.getParameter("lastName");
-			String email = request.getParameter("email");
-			String gender = request.getParameter("gender");
-			Date date = null;
 			try{
 				date = Date.valueOf(request.getParameter("date"));
 			}catch(Exception e){
@@ -98,13 +106,13 @@
 			
 			Company c = DbRepository.find(Company.class, id);
 			Employee e = new Employee(name,lastName,email,gender,date,c);
-			DbRepository.addEmployee(e);
-		}
+			DbRepository.editEmployee(e);
+		}}
 		
-	}catch(Exception e){
-		response.sendRedirect("error.jsp?msg="+ e.getMessage());
-		return;
-	}
+		catch(Exception e){
+			response.sendRedirect("error.jsp?msg="+ e.getMessage());
+			return;
+		}
 	%>
 </body>
 </html>
