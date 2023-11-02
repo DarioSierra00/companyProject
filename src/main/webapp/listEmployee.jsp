@@ -8,8 +8,11 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"> 
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="./styleSheet.css">
 </head>
+<%if(session.getAttribute("rol") != null){ %>
 <body>
 <%@include file="nav.jsp" %>
 <%
@@ -41,10 +44,15 @@
 				<td><%=e.getGender() %></td>
 				<td><%=e.getDateOfBirth() %></td>
 				<td><%=e.getCompany().getName()%></td>
+				<%if(session.getAttribute("rol").equals("Admin")){ %>
 				<td><a href="editEmployee.jsp?id=<%=e.getId()%>"><button type="button">Edit</button></a></td>
 				<td><a href="deleteEmployee.jsp?id=<%=e.getId()%>"><button type="button">Delete</button></a></td>
 				</tr>
-	<% }%>
+	<% }}}
+else{
+	response.sendRedirect("./login.jsp");
+}
+	%>
 </table>
 </body>
 </html>

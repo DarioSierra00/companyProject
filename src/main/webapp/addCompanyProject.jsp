@@ -94,9 +94,19 @@
 				response.sendRedirect("error.jsp?msg=Error en la fecha introducida");
 				return;
 			}
-
-			CompanyProject cp = new CompanyProject(company,project,begin,end);
-			DbRepository.addEntity(cp);
+			try{
+				
+				CompanyProject cp = new CompanyProject(company,project,begin,end);
+				try{
+					DbRepository.addEntity(cp);
+					
+				}catch(Exception e){
+					response.sendRedirect("error.jsp?msg="+ e.getMessage());
+				}
+			}catch(Exception e){
+				response.sendRedirect("error.jsp?msg="+ e.getMessage());
+			}
+			
 		}
 		
 	}catch(Exception e){
