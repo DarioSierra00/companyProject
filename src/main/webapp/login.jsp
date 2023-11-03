@@ -24,20 +24,21 @@
 		          </div>
 		          <form>
             		<div class="form-floating mb-3">
-						<label for="exampleInputEmail1" class="form-label">User</label>
-						<input type="text" class="form-control" id="user" name="user" placeholder="Enter your user" required>
+						<label for="exampleInputEmail1" class="form-label">Id</label>
+						<input type="text" class="form-control" id="id" name="id" placeholder="Enter your id" required>
 		            </div>
 		           	<div class="form-floating mb-3">
 						<label for="exampleInputEmail1" class="form-label">Password</label>
 						<input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
-		            </div>          
+		            </div>   
 		            <div class="d-grid">
 		             	<button class="btn btn-success btn-lg" id="submitButton" value="login" type="submit" name="login">Login</button>
 						<%
 							if(request.getParameter("login") != null){
-								User userFind = DbRepository.find(User.class, request.getParameter("user"));
-								if(userFind != null && userFind.getPassword().equals(request.getParameter("password"))){
-									session.setAttribute("rol", userFind.getRole());
+								Employee employeeFind = DbRepository.find(Employee.class, Integer.valueOf(request.getParameter("id")));
+								if(employeeFind != null && employeeFind.getPassword().equals(request.getParameter("password"))){
+									session.setAttribute("employee", employeeFind);
+									session.setAttribute("rol", employeeFind.getRole());
 									response.sendRedirect("./listEmployee.jsp");
 								}else{
 									%>

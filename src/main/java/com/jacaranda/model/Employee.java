@@ -1,12 +1,14 @@
 package com.jacaranda.model;
 
 import java.sql.Date;
+import java.util.List;
 import java.util.Objects;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -19,27 +21,35 @@ public class Employee {
 	private String email;
 	private String gender;
 	private Date dateOfBirth;
+	private String password;
+	private String role;
 	
 	@ManyToOne
 	@JoinColumn(name="idCompany")
 	private Company company;
 
-	public Employee() {
-		super();
-	}
+	@OneToMany(mappedBy="company")
+	private List<EmployeeProject> employeeProject;
+	
 
-	public Employee(String firstName, String lastName, String email, String gender, Date dateOfBirth,
-			Company company) {
+	public Employee(int id, String firstName, String lastName, String email, String gender, Date dateOfBirth,
+			String password, String role, Company company) {
 		super();
+		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
 		this.gender = gender;
 		this.dateOfBirth = dateOfBirth;
+		this.password = password;
+		this.role = role;
 		this.company = company;
 	}
-	
-	
+
+	public Employee() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	public Employee(int id, String firstName, String lastName, String email, String gender, Date dateOfBirth,
 			Company company) {
@@ -113,6 +123,24 @@ public class Employee {
 	public int hashCode() {
 		return Objects.hash(id);
 	}
+	
+	
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
 
 	@Override
 	public boolean equals(Object obj) {
@@ -124,13 +152,5 @@ public class Employee {
 			return false;
 		Employee other = (Employee) obj;
 		return id == other.id;
-	}
-
-	@Override
-	public String toString() {
-		return "Employee [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
-				+ ", gender=" + gender + ", dateOfBirth=" + dateOfBirth + ", company=" + company + "]";
-	}
-	
-		
+	}		
 }
