@@ -34,15 +34,21 @@
 		            <div class="d-grid">
 		             	<button class="btn btn-success btn-lg" id="submitButton" value="login" type="submit" name="login">Login</button>
 						<%
+						Employee employeeFind;
 							if(request.getParameter("login") != null){
-								Employee employeeFind = DbRepository.find(Employee.class, Integer.valueOf(request.getParameter("id")));
+								try{
+									employeeFind = DbRepository.find(Employee.class, Integer.valueOf(request.getParameter("id")));
+								}catch(Exception e){
+									response.sendRedirect("error.jsp?msg=" + e.getMessage());
+									return;
+								}
 								if(employeeFind != null && employeeFind.getPassword().equals(request.getParameter("password"))){
-									session.setAttribute("employee", employeeFind);
 									session.setAttribute("rol", employeeFind.getRole());
-									response.sendRedirect("./listEmployee.jsp");
+									session.setAttribute("employee", employeeFind);
+									response.sendRedirect("./annadirHoras.jsp");
 								}else{
 									%>
-										<div class="errorMessage"></div>
+										<div class="errorMessage">Usuario o contraseña incorrectos</div>
 									<%
 								}
 							}

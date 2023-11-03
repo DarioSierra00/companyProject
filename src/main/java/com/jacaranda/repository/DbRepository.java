@@ -19,7 +19,7 @@ public class DbRepository {
 		try {
 			session = DbUtility.getSessionFactory().openSession();
 		} catch (Exception e) {
-			throw new Exception("Error en la base de datos");
+			throw new Exception(e.getMessage());
 		}
 		try {
 			result = session.find(c, id);

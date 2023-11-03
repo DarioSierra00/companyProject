@@ -1,4 +1,10 @@
+<%@page import="java.time.chrono.ChronoLocalDateTime"%>
 <%@page import="java.time.LocalDate"%>
+<%@page import="java.sql.Date"%>
+<%@page import="org.hibernate.boot.model.relational.Database"%>
+<%@page import="java.time.Duration"%>
+<%@page import="java.time.temporal.ChronoUnit"%>
+<%@page import="java.time.LocalDateTime"%>
 <%@page import="com.jacaranda.exception.UserException"%>
 <%@page import="com.jacaranda.model.Project"%>
 <%@page import="com.jacaranda.model.Employee"%>
@@ -16,12 +22,12 @@
 <link rel="stylesheet" href="./styleSheet.css">
 </head>
 <body>
+<%@include file="nav.jsp" %>
 <%
-ArrayList<Project> listProjects = null;
+
 Employee e = null;
 
 	try{
-		listProjects = (ArrayList<Project>) DbRepository.findAll(Project.class);
 		e = (Employee) session.getAttribute("employee");
 	}catch(Exception e1){
 		response.sendRedirect("error.jsp?msg="+ e1.getMessage());
@@ -44,22 +50,31 @@ Employee e = null;
 						for(CompanyProject cp : e.getCompany().getCompanyProject()){
 							
 						
-							
+							if(cp.getEnd().compareTo(Date.valueOf(LocalDate.now()))==1){
 							%>
 							
 							<option value="<%=cp.getProject().getId()%>"><%=cp.getProject().getName()%></option>
-							<%} %>
+							<%}} %>
 						</select>
 	
 		            </div>
 		            <div class="d-grid">
-		            <% if(request.getParameter("login") == null){%>
+		            <% 
+		            if(request.getParameter("login") == null){%>
 		             	<button class="btn btn-success btn-lg" id="submitButton" value="login" type="submit" name="login">Go</button>
 						<%} 
 		            else{%>
-		            	<% LocalDate dateBegin = LocalDate.now();%>
-			             	<button class="btn btn-warning btn-lg" id="submitButton" value="login" type="submit" name="login">Stop</button>
+		            	<% 
+		            	LocalDateTime dateBegin = LocalDateTime.now();
+		            	session.setAttribute("time", dateBegin);%>
+			             	<button class="btn btn-warning btn-lg" id="submitButton" value="stop" type="submit" name="stop">Stop</button>
+			             	
 		           <% }
+		            if(session.getAttribute("time") != null){
+		            	
+		            	int sec = (int) ChronoUnit.SECONDS.between((LocalDateTime) session.getAttribute("time"), LocalDateTime.now());
+		            	out.println(sec);
+		            }
 						%>
 						</div>
 						</form>

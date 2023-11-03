@@ -28,7 +28,7 @@ public class Employee {
 	@JoinColumn(name="idCompany")
 	private Company company;
 
-	@OneToMany(mappedBy="company")
+	@OneToMany(mappedBy="employee")
 	private List<EmployeeProject> employeeProject;
 	
 

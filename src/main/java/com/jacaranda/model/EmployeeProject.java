@@ -15,33 +15,33 @@ public class EmployeeProject {
 	@Id
 	@ManyToOne
 	@JoinColumn(name="idProject")
-	private int project;
+	private Project project;
 	
 	@Id
 	@ManyToOne
 	@JoinColumn(name="idEmployee")
-	private int employee;
+	private Employee employee;
 	private int minutes;
 	public EmployeeProject() { 
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public EmployeeProject(int project, int employee, int minutes) {
+	public EmployeeProject(Project project, Employee employee, int minutes) {
 		super();
 		this.project = project;
 		this.employee = employee;
 		this.minutes = minutes;
 	}
-	public int getProject() {
+	public Project getProject() {
 		return project;
 	}
-	public void setProject(int project) {
+	public void setProject(Project project) {
 		this.project = project;
 	}
-	public int getEmployee() {
+	public Employee getEmployee() {
 		return employee;
 	}
-	public void setEmployee(int employee) {
+	public void setEmployee(Employee employee) {
 		this.employee = employee;
 	}
 	public int getMinutes() {
@@ -63,7 +63,8 @@ public class EmployeeProject {
 		if (getClass() != obj.getClass())
 			return false;
 		EmployeeProject other = (EmployeeProject) obj;
-		return employee == other.employee && project == other.project;
+		return Objects.equals(employee, other.employee) && Objects.equals(project, other.project);
 	}
+	
 	
 }
