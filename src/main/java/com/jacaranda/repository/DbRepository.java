@@ -6,8 +6,8 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.SelectionQuery;
 
-import com.jacaranda.model.Company;
 import com.jacaranda.model.CompanyProject;
+import com.jacaranda.model.EmployeeProject;
 import com.jacaranda.utility.DbUtility;
 
 public class DbRepository {
@@ -55,6 +55,22 @@ public class DbRepository {
 		}
 		try {
 			result = session.find(CompanyProject.class,cp);
+		} catch (Exception e) {
+			throw new Exception("Error al obtener la entidad");
+		}
+		return result;
+	}
+	
+	public static EmployeeProject find(EmployeeProject cp) throws Exception{
+		Session session;
+		EmployeeProject result = null;
+		try {
+			session = DbUtility.getSessionFactory().openSession();
+		} catch (Exception e) {
+			throw new Exception("Error en la base de datos");
+		}
+		try {
+			result = session.find(EmployeeProject.class,cp);
 		} catch (Exception e) {
 			throw new Exception("Error al obtener la entidad");
 		}

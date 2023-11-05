@@ -32,7 +32,6 @@ public class CompanyProject {
 		super();
 	}
 	
-	
 	public CompanyProject(Company company, Project project, Date begin, Date end) {
 		super();
 		this.company = company;

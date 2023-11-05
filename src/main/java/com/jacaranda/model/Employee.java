@@ -31,11 +31,14 @@ public class Employee {
 	@OneToMany(mappedBy="employee")
 	private List<EmployeeProject> employeeProject;
 	
+	public Employee() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
-	public Employee(int id, String firstName, String lastName, String email, String gender, Date dateOfBirth,
+	public Employee(String firstName, String lastName, String email, String gender, Date dateOfBirth,
 			String password, String role, Company company) {
 		super();
-		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
@@ -46,15 +49,10 @@ public class Employee {
 		this.company = company;
 	}
 
-	public Employee() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
 
-	public Employee(int id, String firstName, String lastName, String email, String gender, Date dateOfBirth,
+	public Employee(String firstName, String lastName, String email, String gender, Date dateOfBirth,
 			Company company) {
 		super();
-		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
@@ -124,8 +122,6 @@ public class Employee {
 		return Objects.hash(id);
 	}
 	
-	
-
 	public String getPassword() {
 		return password;
 	}

@@ -1,3 +1,4 @@
+<%@page import="com.jacaranda.model.EmployeeProject"%>
 <%@page import="java.time.chrono.ChronoLocalDateTime"%>
 <%@page import="java.time.LocalDate"%>
 <%@page import="java.sql.Date"%>
@@ -43,37 +44,85 @@ Employee e = null;
 		            <div class="h1 fw-light">Añadir horas</div>
 		          </div>
 		          <form>
+		          <!-- Cuando no hayamos pulsado el boton de start entrará -->
+		          <%if(request.getParameter("start") == null){ %>
             		<div class="form-floating mb-3">
-						<select>
-						Projects
+            		Projects
+						<select name="project">
+						
 						<% 
+						//Recorremos la lista de proyectos en los que está el empleado
 						for(CompanyProject cp : e.getCompany().getCompanyProject()){
 							
-						
-							if(cp.getEnd().compareTo(Date.valueOf(LocalDate.now()))==1){
+						//Si el proyecto ya ha finalizado no nos aparecerá
+							if(cp.getEnd().after(Date.valueOf(LocalDate.now()))){
 							%>
-							
+							<!-- Aqui nos apareceran los proyectos no finalizados -->
 							<option value="<%=cp.getProject().getId()%>"><%=cp.getProject().getName()%></option>
 							<%}} %>
 						</select>
-	
 		            </div>
+		            
+		            <%
+		            //Cuando pulsemos el boton de start
+		          }else if(request.getParameter("start") != null){
+		        	  //Nos buscará el proyecto que hemos seleccionado en el desplegable
+		            	Project p = DbRepository.find(Project.class, Integer.valueOf(request.getParameter("project")));
+		            	%>
+		            	<!-- Aqui ponemos un input readonly para ver que proyecto hemos elegido -->
+		            	<input type="text" name="nameProject" id="nameProject" value="<%=p.getName()%>" readonly>
+		            	<!-- Aqui ponemos un input hidden para coger el id de ese proyecto -->
+		            	<input type="text" name="idProject" id="idProject" value="<%=p.getId()%>" hidden>
+		            	<% 
+		            	
+		            }
+		            %>
 		            <div class="d-grid">
 		            <% 
-		            if(request.getParameter("login") == null){%>
-		             	<button class="btn btn-success btn-lg" id="submitButton" value="login" type="submit" name="login">Go</button>
+		            //Cuando no hayamos pulsado el start saldrá este botón para empezar a contar
+		            if(request.getParameter("start") == null){%>
+		             	<button class="btn btn-success btn-lg" id="submitButton" value="start" type="submit" name="start">Start</button>
 						<%} 
 		            else{%>
 		            	<% 
+		            	//En el momento que le demos al botón de start, asignamos a una variable el valor del tiempo en el momento de pulsar el boton
 		            	LocalDateTime dateBegin = LocalDateTime.now();
-		            	session.setAttribute("time", dateBegin);%>
-			             	<button class="btn btn-warning btn-lg" id="submitButton" value="stop" type="submit" name="stop">Stop</button>
+		            	//Asignamos a la session time, la variable anterior
+		            	session.setAttribute("time", dateBegin);
+		            	//Asignamos a la session cont el valor 0
+		            	session.setAttribute("cont", 0);
+		            	//Creamos el botón save
+		            	%>
+			             	<button class="btn btn-warning btn-lg" id="submitButton" value="save" type="submit" name="save">Save</button>
 			             	
 		           <% }
-		            if(session.getAttribute("time") != null){
+		            //Cuando la session time tenga un valor y hayamos pulsado el boton de save, entrará
+		            if(session.getAttribute("time") != null && request.getParameter("save") != null){
 		            	
+		            	//Asignamos a una variable el tiempo que hay entre el valor de la session que guardamos antes en time y el valor del tiempo de ahora
 		            	int sec = (int) ChronoUnit.SECONDS.between((LocalDateTime) session.getAttribute("time"), LocalDateTime.now());
-		            	out.println(sec);
+		            	//Asignamos a la session cont el valor de sec
+		            	session.setAttribute("cont", sec);
+						
+		            	//Asignamos a una variable de project 
+		            	Project project = DbRepository.find(Project.class, Integer.valueOf(request.getParameter("idProject")));
+		            	int min = (int) session.getAttribute("cont");
+		            	
+		            	int trueMin = min * 60;
+		            	
+		            	
+		            	
+		            	EmployeeProject emp = new EmployeeProject(project,e,trueMin);
+		            	if(DbRepository.find(emp) != null){
+		            		emp.setMinutes(DbRepository.find(emp).getMinutes()+trueMin);
+		            		DbRepository.editEntity(emp);
+		            	}
+		            	else{
+		            		DbRepository.addEntity(emp);
+		            	}
+		
+		            	session.removeAttribute("cont");
+		            	session.removeAttribute("time");
 		            }
 						%>
 						</div>
@@ -83,6 +132,5 @@ Employee e = null;
 		      </div>
 		    </div>
 		  </div>
-		</div>
 </body>
 </html>
