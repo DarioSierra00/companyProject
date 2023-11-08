@@ -42,9 +42,65 @@ else{
 	response.sendRedirect("./login.jsp");
 }
 %>
-<%if(session.getAttribute("employee") !=null ){ 
+<%if(session.getAttribute("employee") !=null){ 
 	Map<Integer, LocalDateTime> inWork = new HashMap<Integer, LocalDateTime>();
-%>
+	if(session.getAttribute("mapWork") != null){
+		inWork = (HashMap<Integer,LocalDateTime>) session.getAttribute("mapWork");
+	}
+	
+	if(request.getParameter("start") != null){
+		try{
+	        inWork.put(Integer.valueOf(request.getParameter("start")), LocalDateTime.now());
+	        session.setAttribute("mapWork", inWork);
+		}catch(Exception e1){
+			response.sendRedirect("./error.jsp?error="+e1.getMessage());
+			return;
+		}
+    }
+	else if(request.getParameter("stop") != null){
+		Project project = null;
+		try{
+			inWork.remove(Integer.valueOf(request.getParameter("stop")));
+			session.setAttribute("mapWork", inWork);
+		}catch(Exception e1){
+			response.sendRedirect("./error.jsp?error="+e1.getMessage());
+			return;
+		}
+		
+		if(session.getAttribute("time") == null){
+			session.setAttribute("time", LocalDateTime.now());
+		}
+		
+		if(session.getAttribute("sec") == null){
+			session.setAttribute("sec", 0);
+		}
+		session.setAttribute("sec",(int) session.getAttribute("sec") 
+					+(int) ChronoUnit.SECONDS.between((LocalDateTime) session.getAttribute("time"), LocalDateTime.now()));
+			
+			EmployeeProject emp;
+			int sec = 0;
+			try{
+				sec = (int) session.getAttribute("sec");
+				project = DbRepository.find(Project.class, Integer.valueOf(request.getParameter("stop")));
+				emp = new EmployeeProject(project,e,sec);
+			}catch(Exception e1){
+				response.sendRedirect("./error.jsp?error="+e1.getMessage());
+				return;
+			}
+			
+			if(DbRepository.find(emp) != null){
+				emp.setMinutes(DbRepository.find(emp).getMinutes()+sec);
+				DbRepository.editEntity(emp);
+			}
+			else{
+				DbRepository.addEntity(emp);
+			}
+			session.removeAttribute("time");
+			session.removeAttribute("sec");
+		}   
+        
+        
+        %>
 
 	<div class="container px-5 my-5">
 		  <div class="row justify-content-center">
@@ -58,9 +114,7 @@ else{
 		            <div class="form-floating mb-3">
 		    			<label for="exampleInputEmail1" class="form-label">Company</label>
 		    			<input type="text" class="form-control" id="user" name="user" placeholder="Enter Id" value="<%=e.getCompany().getName() %>" readonly>
-		            </div>
-					<%if(request.getParameter("start")==null && session.getAttribute("time") == null) {
-						%>						
+		            </div>			
 			            <div class="form-floating mb-3">
 			                <label for="exampleInputEmail1" class="form-label">Project</label>
 			                <table class="table">
@@ -70,11 +124,12 @@ else{
 										%>
 								 			 <tr>
 								 			 	<td><%=c.getProject().getName()%></td>
-								 			 	<%if(request.getParameter("start") == null){ %>
-								 			 	<td><button class="btn btn-info btn-lg" id="start" type="submit" name="start" value="">Start work</button></td>
+								 			 	<%if(!inWork.containsKey(c.getProject().getId())){ %>
+								 			 	<td><button class="btn btn-info btn-lg" id="start" type="submit" name="start" value="<%=c.getProject().getId() %>">Start work</button></td>
 								 			 	<%}
-								 			 	else if(request.getParameter("start") != null){%>
-									 			 	<td><button class="btn btn-danger btn-lg" id="stop" type="submit" name="stop">Stop work</button></td>
+								 			 	else{
+								 			 	%>
+									 			 	<td><button class="btn btn-danger btn-lg" id="stop" type="submit" name="stop" value="<%=c.getProject().getId() %>">Stop work</button></td>
 								 			 	<%}
 								 			 	%>
 								 			 </tr>						
@@ -82,15 +137,11 @@ else{
 							</table>
 			            </div>
 			            </form>
-			            
-			            <%if(request.getParameter("start") != null){
-			            	
-			            }%>
 						</div>
 		            </div>
 		        </div>
 		      </div>
 		    </div>
-		    <%}} %>
+		    <%} %>
 </body>
 </html>
