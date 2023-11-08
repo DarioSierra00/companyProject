@@ -35,7 +35,7 @@
         </li>
       </ul>
       <form class="d-flex">
-        <button class="btn btn-danger" type="button">LogOut</button>
+        <button class="btn btn-danger" type="button" name="logout">LogOut</button>
       </form>
     </div>
   </div>

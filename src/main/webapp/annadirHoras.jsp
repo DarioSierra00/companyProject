@@ -1,3 +1,5 @@
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.Map"%>
 <%@page import="com.jacaranda.model.EmployeeProject"%>
 <%@page import="java.time.chrono.ChronoLocalDateTime"%>
 <%@page import="java.time.LocalDate"%>
@@ -36,7 +38,14 @@ if(session.getAttribute("rol") != null){
 		return;
 	}
 }
+else{
+	response.sendRedirect("./login.jsp");
+}
 %>
+<%if(session.getAttribute("employee") !=null ){ 
+	Map<Integer, LocalDateTime> inWork = new HashMap<Integer, LocalDateTime>();
+%>
+
 	<div class="container px-5 my-5">
 		  <div class="row justify-content-center">
 		    <div class="col-lg-8">
@@ -54,105 +63,34 @@ if(session.getAttribute("rol") != null){
 						%>						
 			            <div class="form-floating mb-3">
 			                <label for="exampleInputEmail1" class="form-label">Project</label>
-			    			<select id="companys" name="projects" required>
+			                <table class="table">
 							<%
 								for (CompanyProject c : e.getCompany().getCompanyProject()){
 									if(c.getEnd().after(Date.valueOf(LocalDate.now()))){								
 										%>
-								 			 <option value="<%=c.getProject().getId()%>"><%=c.getProject().getName()%></option>							
-								 		<%
-									}
-							 	}%>
-							</select>
+								 			 <tr>
+								 			 	<td><%=c.getProject().getName()%></td>
+								 			 	<%if(request.getParameter("start") == null){ %>
+								 			 	<td><button class="btn btn-info btn-lg" id="start" type="submit" name="start" value="">Start work</button></td>
+								 			 	<%}
+								 			 	else if(request.getParameter("start") != null){%>
+									 			 	<td><button class="btn btn-danger btn-lg" id="stop" type="submit" name="stop">Stop work</button></td>
+								 			 	<%}
+								 			 	%>
+								 			 </tr>						
+								 		<%}}%>
+							</table>
 			            </div>
-			            <%
-					}else if(request.getParameter("start") != null || session.getAttribute("time") != null) {
-		            	if(session.getAttribute("project") == null){
-			            	session.setAttribute("project", DbRepository.find(Project.class, Integer.valueOf(request.getParameter("projects"))));
-		            	}
-		            %>
-			            <div class="form-floating mb-3">
-							<label for="exampleInputEmail1" class="form-label">Project</label>
-			            	<input type="text" class="form-control" id="idProject" name="projectId" value="<%=((Project)session.getAttribute("project")).getId()%>" hidden>
-			    			<input type="text" class="form-control" id="project" name="project" value="<%=((Project)session.getAttribute("project")).getName()%>" readonly>
-			            </div>
-		            <%}%>
-					
-						 
-		            <%if(request.getParameter("start")==null && session.getAttribute("time")==null){%>
-			            <div class="d-grid">
-			              	<button class="btn btn-primary btn-lg" id="submitButton" type="submit" name="start">Start</button>
-			            </div>		            	
-		            <%
-		            } else {
-		            	if(session.getAttribute("time")==null){
-			            	session.setAttribute("time", LocalDateTime.now());	            			            		
-		            	}
-		            	%>
-		            	<div class="d-grid">
-			              	<button class="btn btn-primary btn-lg" id="submitButton" type="submit" name="stop">Stop</button>
-			            </div>
-		     		<%}
-		     		if(session.getAttribute("time")!=null && request.getParameter("stop")!=null){
-		     			if(session.getAttribute("sec")==null){
-		     				session.setAttribute("sec", 0);
-		     			}
-		     			
-		     			session.setAttribute("sec",(int) session.getAttribute("sec") +(int) ChronoUnit.SECONDS.between((LocalDateTime) session.getAttribute("time"), LocalDateTime.now()));
-		     			session.removeAttribute("time");
-		     			%>
-		     			
-		     			<div class="d-grid">
-			              	<button class="btn btn-primary btn-lg" id="submitButton" type="submit" name="save">Save</button>
-			            </div>
+			            </form>
 			            
-		     		<%} if(request.getParameter("save")!=null){
-		     			Project p2;
-		     			try{
-		     				p2 = DbRepository.find(Project.class,Integer.valueOf(request.getParameter("projectId")));
-		     					
-		     			}catch(Exception r){
-		     				response.sendRedirect(".././error.jsp?msg="+r.getMessage());
-		     				return;
-		     			}
-		     			
-		     			EmployeeProject ep;
-		     			int min=0;
-		     			try{
-		     				int sec = (int) session.getAttribute("sec");
-		     				min = sec;
-		     				ep = new EmployeeProject(p2,e,min);
-		     				
-		     				
-		     			}catch(Exception r){
-		     				response.sendRedirect(".././error.jsp?msg="+r.getMessage());
-		     				return;
-		     			}
-		     			
-	     				if(DbRepository.find(ep)!=null){
-	     					ep.setMinutes(DbRepository.find(ep).getMinutes()+min);
-		     				DbRepository.editEntity(ep);
-	     				} else {
-		     				DbRepository.addEntity(ep);
-	     					
-	     				}
-			     		session.removeAttribute("sec");
-			     		session.removeAttribute("project");
-		     		}
-		     		%>
-		     		    <button class="btn btn-danger btn-lg" id="logout" type="submit" name="logout">Log out</button>	
-						</form>
-						
-						<%
-						if(request.getParameter("logout") != null){
-							session.removeAttribute("employee");
-							response.sendRedirect("./login.jsp");
-						}
-						%>
+			            <%if(request.getParameter("start") != null){
+			            	
+			            }%>
 						</div>
 		            </div>
 		        </div>
 		      </div>
 		    </div>
+		    <%}} %>
 </body>
 </html>
