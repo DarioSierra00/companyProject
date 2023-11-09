@@ -97,6 +97,8 @@ else{
 			//Borramos el atributo de la session
 			session.removeAttribute("sec");
 			
+			/*Borro del mapa la key que será el id del proyecto que he pulsado stop,
+			actualizamos la session del mapWork*/
 			try{
 				inWork.remove(Integer.valueOf(request.getParameter("stop")));
 				session.setAttribute("mapWork", inWork);
