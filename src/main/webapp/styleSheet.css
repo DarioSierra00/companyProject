@@ -73,3 +73,10 @@ thead tr th{
 	vertical-align: middle;
 }
 
+#id{
+	position: absolute;
+	left: 90%;
+	top: 10%;
+	transform: translate(-10%,-90%);
+}
+

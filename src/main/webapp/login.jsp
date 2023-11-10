@@ -45,7 +45,7 @@
 								if(employeeFind != null && employeeFind.getPassword().equals(request.getParameter("password"))){
 									session.setAttribute("rol", employeeFind.getRole());
 									session.setAttribute("employee", employeeFind);
-									response.sendRedirect("./annadirHoras.jsp");
+									response.sendRedirect("./addHoursMultipleProject.jsp");
 								}else{
 									%>
 										<div class="errorMessage">Usuario o contraseña incorrectos</div>

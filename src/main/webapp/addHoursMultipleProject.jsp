@@ -30,7 +30,7 @@
 /*Primeramente comprobamos que el usuario que acceda a la pagina tenga rol, si tiene rol, asignamos al empleado la
 session del empleado, si no tiene rol, te redirige al login para iniciar sesion*/
 	Employee e = null;
-if(session.getAttribute("rol") != null){
+if(session.getAttribute("employee") != null){
 	
 	try{
 		e = (Employee) session.getAttribute("employee");
@@ -38,10 +38,8 @@ if(session.getAttribute("rol") != null){
 		response.sendRedirect("error.jsp?msg="+ e1.getMessage());
 		return;
 	}
-}
-else{
-	response.sendRedirect("./login.jsp");
-}
+
+
 %>
 <%
 	/*Creamos un mapa con una key Integer, que será la clave primaria del proyecto y de valor el tiempo.
@@ -119,15 +117,15 @@ else{
 		          <div class="text-center">
 		            <div class="h1 fw-light">Añadir horas</div>
 		          </div>
-		            <form method="get">
-		            <div class="form-floating mb-3">
-		    			<label for="exampleInputEmail1" class="form-label">Company</label>
-		    			<input type="text" class="form-control" id="user" name="user" placeholder="Enter Id" value="<%=e.getCompany().getName() %>" readonly>
-		            </div>			
+		            <form method="get">	
 			            <div class="form-floating mb-3">
 			                <label for="exampleInputEmail1" class="form-label">Project</label>
 			                <table class="table">
 							<%
+							/*Recorremos los companyProject y cuando la fecha de finalización de uno sea después 
+							de la fecha de hoy, nos mostrará el nombre del proyecto. Luego si el mapa no contiene
+							el id del proyecto, significa que no está trabajando y aparecería el botón de start.
+							Si no, aparecerá el botón de stop work*/
 								for (CompanyProject c : e.getCompany().getCompanyProject()){
 									if(c.getEnd().after(Date.valueOf(LocalDate.now()))){								
 										%>
@@ -151,5 +149,9 @@ else{
 		        </div>
 		      </div>
 		    </div>
+		    <%}else{
+		    	response.sendRedirect("./login.jsp");
+		    	return;
+		    } %>
 </body>
 </html>

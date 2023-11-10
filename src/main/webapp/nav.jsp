@@ -1,43 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <title>Nav</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<meta charset="UTF-8">
+<title>nav</title>
 </head>
 <body>
-<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="javascript:void(0)">EmployeeCompany</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="mynavbar">
-      <ul class="navbar-nav me-auto">
-        <li class="nav-item">
-          <a class=" nav-link" href="./listEmployee.jsp">List Employee</a>
-        </li>
-        <li class="nav-item">
-          <a class=" nav-link" href="./companyList.jsp">List Company</a>
-        </li>
-        <li class="nav-item">
-          <a class=" nav-link" href="./listCompanyProject.jsp">List CompanyProject</a>
-        </li>
-        <li class="nav-item">
-          <a class=" nav-link" href="./addEmployee.jsp">Add Employee</a>
-        </li>
-        <li class="nav-item">
-          <a class=" nav-link" href="./addCompanyProject.jsp">Add CompanyProject</a>
-        </li>
-        <li class="nav-item">
-          <a class=" nav-link" href="./annadirHoras.jsp">Add Hours</a>
-        </li>
-      </ul>
-      <form class="d-flex">
-        <button class="btn btn-danger" type="button" name="logout">LogOut</button>
-      </form>
-    </div>
+<nav class="navbar navbar-expand-lg navbar-light bg-dark">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link text-white" href="./listEmployee.jsp">Lista empleados</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-white" href="companyList.jsp">Lista compañias</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-white" href="./listCompanyProject.jsp">Lista compañias empleados</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-white" href="./addEmployee.jsp">Añadir empleado</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-white" href="./addCompanyProject.jsp">Añadir compañias projectos</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-white" href="./addHoursMultipleProject.jsp">Trabajar</a>
+      </li>
+    </ul>
+    <form>
+		<div class="justify-content-end">
+			<%if(session.getAttribute("employee") != null){ %>
+				<button class="btn btn-outline-danger btn-lg" id="logOut" value="logOut" type="submit" name="logOut">Log out</button>
+			<%}%>
+		</div>
+	</form>
+     <%if(request.getParameter("logOut") != null){
+   	  	session.removeAttribute("employee");
+		response.sendRedirect("./login.jsp");
+		return;
+     }%>
   </div>
 </nav>
 </body>
