@@ -17,6 +17,9 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="./styleSheet.css">
 </head>
+<%if(session.getAttribute("rol") == null){
+	response.sendRedirect("./login.jsp");
+}%>
 <body>
 <%@include file="nav.jsp" %>
 <%
@@ -78,13 +81,13 @@
   	<div class="form-group row">
     <label for="text5" class="col-4 col-form-label">Password</label> 
     <div class="col-8">
-      <input id="password" name="password1" type="text" placeholder="Introduzca su contraseña" class="form-control">
+      <input id="password" name="password1" type="password" placeholder="Introduzca su contraseña" class="form-control">
     </div>
   </div>
   	<div class="form-group row">
     <label for="text5" class="col-4 col-form-label">Password</label> 
     <div class="col-8">
-      <input id="password" name="password2" type="text" placeholder="Introduzca de nuevo su contraseña" class="form-control">
+      <input id="password" name="password2" type="password" placeholder="Introduzca de nuevo su contraseña" class="form-control">
     </div>
   </div>
   <div class="form-group row">
@@ -115,12 +118,17 @@
 			
 			if(password.equals(passwordValidate)){
 				try{
-					encriptPassword = String.valueOf(DigestUtils.md5(password));
+					encriptPassword = String.valueOf(DigestUtils.md5Hex(password));
 				}catch(Exception e){
 					response.sendRedirect("error.jsp?msg=Error en la contraseña");
 					return;
 				}
 				
+			}
+			else{
+				%>
+				<div class="errorMessage">Password errónea</div>
+				<%
 			}
 			int id = Integer.valueOf(request.getParameter("nameCompany"));
 			

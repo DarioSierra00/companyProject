@@ -1,3 +1,4 @@
+<%@page import="org.apache.commons.codec.digest.DigestUtils"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     <%@page import="com.jacaranda.model.CompanyProject"%>
@@ -16,6 +17,9 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="./styleSheet.css">
 </head>
+<%if(session.getAttribute("rol") == null){
+	response.sendRedirect("./login.jsp");
+}%>
 <body>
 <%@include file="nav.jsp" %>
 <%
@@ -42,6 +46,8 @@
 			String email = request.getParameter("email");
 			String gender = request.getParameter("gender");
 			int id = 0;
+			String password = DigestUtils.md5Hex(request.getParameter("password"));
+			String role = request.getParameter("role");
 			
 			try{
 				id = Integer.valueOf(request.getParameter("nameCompany"));
@@ -59,7 +65,7 @@
 			}
 			
 			Company c = DbRepository.find(Company.class,id);
-			e = new Employee(Integer.valueOf(request.getParameter("id")),name,lastName,email,gender,date,c);
+			e = new Employee(Integer.valueOf(request.getParameter("id")),name,lastName,email,gender,date,password,role,c);
 		}catch(Exception e5){
 			response.sendRedirect("error.jsp?msg="+ e5.getMessage());
 			return;
@@ -77,9 +83,9 @@
 	<div class="mainWrap">
 <form>
        <div class="form-group row">
-    <label for="text1" class="col-4 col-form-label">First name</label> 
+    <label for="text1" class="col-4 col-form-label">Id</label> 
     <div class="col-8">
-      <input id="id" name="id" type="text" class="form-control" value="<%=request.getParameter("id")%>" hidden>
+      <input id="id" name="id" type="text" class="form-control" value="<%=request.getParameter("id")%>" readonly>
     </div>
   </div>
   <div class="form-group row">
@@ -109,11 +115,12 @@
   <div class="form-group row">
     <label for="text5" class="col-4 col-form-label">DateOfBirth</label> 
     <div class="col-8">
-      <input id="date" name="date" type="date" class="form-control" value="<%=emp.getDateOfBirth() %>">
+      <input id="date" name="date" type="date" class="form-control" value="<%=emp.getDateOfBirth()%>">
     </div>
   </div>
   <div class="form-group row">
-    Compañia
+    <label for="text5" class="col-4 col-form-label">Compañía</label> 
+    <div class="col-8">
     <select name="nameCompany">
     <%
     	for(Company c : result){
@@ -128,8 +135,20 @@
     %>
     	
     </select>
+    </div>
   </div> 
-  	
+  	<div class="form-group row">
+    <label for="text5" class="col-4 col-form-label">Password</label> 
+    <div class="col-8">
+      <input id="date" name="password" type="password" class="form-control" placeholder="******">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="text5" class="col-4 col-form-label">Role</label> 
+    <div class="col-8">
+      <input id="date" name="role" type="text" class="form-control" value="<%=emp.getRole()%>" readonly>
+    </div>
+  </div>
   <div class="form-group row">
     <div class="offset-4 col-8">
       <button name="submit" type="submit" class="btn btn-success">Editar empleado</button>

@@ -7,7 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-<h1><%=request.getParameter("msg") %></h1>
-	
+<%@include file="nav.jsp" %>
+	<h1 class="text-info" align="center"><%=request.getParameter("msg") %></h1>
 </body>
 </html>

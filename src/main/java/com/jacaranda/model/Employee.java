@@ -4,6 +4,8 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Objects;
 
+import org.apache.commons.codec.digest.DigestUtils;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -63,7 +65,7 @@ public class Employee {
 	
 	
 
-	public Employee(int id, String firstName, String lastName, String email, String gender, Date dateOfBirth,Company company) {
+	public Employee(int id, String firstName, String lastName, String email, String gender, Date dateOfBirth,String password,String role, Company company) {
 		super();
 		this.id = id;
 		this.firstName = firstName;
@@ -71,6 +73,8 @@ public class Employee {
 		this.email = email;
 		this.gender = gender;
 		this.dateOfBirth = dateOfBirth;
+		this.password = password;
+		this.role = role;
 		this.company = company;
 	}
 
@@ -140,7 +144,7 @@ public class Employee {
 	}
 
 	public void setPassword(String password) {
-		this.password = password;
+		this.password = DigestUtils.md5Hex(password);
 	}
 
 	public String getRole() {

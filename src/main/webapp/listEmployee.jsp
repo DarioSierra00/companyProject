@@ -12,7 +12,10 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="./styleSheet.css">
 </head>
-<%if(session.getAttribute("rol") != null){ %>
+<%if(session.getAttribute("rol") == null){
+	response.sendRedirect("./login.jsp");
+	return;
+}%>
 <body>
 <%@include file="nav.jsp" %>
 <%
@@ -44,15 +47,11 @@
 				<td><%=e.getGender() %></td>
 				<td><%=e.getDateOfBirth() %></td>
 				<td><%=e.getCompany().getName()%></td>
-				<%if(session.getAttribute("rol").equals("Admin")){ %>
+				<%if(session.getAttribute("rol").toString().equalsIgnoreCase("Admin")){ %>
 				<td><a href="editEmployee.jsp?id=<%=e.getId()%>"><button type="button">Edit</button></a></td>
 				<td><a href="deleteEmployee.jsp?id=<%=e.getId()%>"><button type="button">Delete</button></a></td>
 				</tr>
-	<% }}}
-else{
-	response.sendRedirect("./login.jsp");
-}
-	%>
+	<% }}%>
 </table>
 </body>
 </html>

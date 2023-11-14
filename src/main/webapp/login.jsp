@@ -9,7 +9,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Login</title>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"> 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="./styleSheet.css">
@@ -37,15 +37,13 @@
 						<%
 						Employee employeeFind;
 							if(request.getParameter("login") != null){ 
-								if(request.getParameter("password").equals(DigestUtils.md5Hex(request.getParameter("password")))){
 								try{
 									employeeFind = DbRepository.find(Employee.class, Integer.valueOf(request.getParameter("id")));
-									employeeFind.getPassword().equals(DigestUtils.md5Hex(request.getParameter("password")));
 								}catch(Exception e){
 									response.sendRedirect("error.jsp?msg=" + e.getMessage());
 									return;
 								}
-								if(employeeFind != null && employeeFind.getPassword().equals(request.getParameter("password"))){
+								if(employeeFind != null && employeeFind.getPassword().equals(DigestUtils.md5Hex(request.getParameter("password")))){
 									session.setAttribute("rol", employeeFind.getRole());
 									session.setAttribute("employee", employeeFind);
 									response.sendRedirect("./addHoursMultipleProject.jsp");
@@ -54,7 +52,7 @@
 										<div class="errorMessage">Usuario o contraseña incorrectos</div>
 									<%
 								}
-							} ç
+							} 
 						%>
 		            </div>
 		          </form>

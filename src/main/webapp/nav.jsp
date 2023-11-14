@@ -18,7 +18,7 @@
         <a class="nav-link text-white" href="companyList.jsp">Lista compañias</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link text-white" href="./listCompanyProject.jsp">Lista compañias empleados</a>
+        <a class="nav-link text-white" href="./listCompanyProject.jsp">Lista compañias proyectos</a>
       </li>
       <li class="nav-item">
         <a class="nav-link text-white" href="./addEmployee.jsp">Añadir empleado</a>
