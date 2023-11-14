@@ -1,3 +1,4 @@
+<%@page import="org.apache.commons.codec.digest.DigestUtils"%>
 <%@page import="com.jacaranda.model.CompanyProject"%>
 <%@page import="com.jacaranda.model.Employee"%>
 <%@page import="com.jacaranda.model.Company"%>
@@ -60,7 +61,9 @@
     </div>
   </div>
   <div class="form-group row">
-    Compañia
+    <label for="text5" class="col-4 col-form-label">Company</label> 
+        <div class="col-8">
+    
     <select name="nameCompany">
     <%
     	for(Company c : result){
@@ -70,8 +73,20 @@
     %>
     	
     </select>
+    </div>
   </div> 
-  	
+  	<div class="form-group row">
+    <label for="text5" class="col-4 col-form-label">Password</label> 
+    <div class="col-8">
+      <input id="password" name="password1" type="text" placeholder="Introduzca su contraseña" class="form-control">
+    </div>
+  </div>
+  	<div class="form-group row">
+    <label for="text5" class="col-4 col-form-label">Password</label> 
+    <div class="col-8">
+      <input id="password" name="password2" type="text" placeholder="Introduzca de nuevo su contraseña" class="form-control">
+    </div>
+  </div>
   <div class="form-group row">
     <div class="offset-4 col-8">
       <button name="submit" type="submit" class="btn btn-success">Añadir empleado</button>
@@ -88,16 +103,29 @@
 			String email = request.getParameter("email");
 			String gender = request.getParameter("gender");
 			Date date = null;
+			String password = request.getParameter("password1");
+			String passwordValidate = request.getParameter("password2");
+			String encriptPassword = null;
 			try{
 				date = Date.valueOf(request.getParameter("date"));
 			}catch(Exception e){
 				response.sendRedirect("error.jsp?msg=Error en la fecha introducida");
 				return;
 			}
+			
+			if(password.equals(passwordValidate)){
+				try{
+					encriptPassword = String.valueOf(DigestUtils.md5(password));
+				}catch(Exception e){
+					response.sendRedirect("error.jsp?msg=Error en la contraseña");
+					return;
+				}
+				
+			}
 			int id = Integer.valueOf(request.getParameter("nameCompany"));
 			
 			Company c = DbRepository.find(Company.class, id);
-			Employee e = new Employee(name,lastName,email,gender,date,c);
+			Employee e = new Employee(name,lastName,email,gender,date,encriptPassword,c);
 			DbRepository.addEntity(e);
 		}
 		

@@ -1,3 +1,4 @@
+<%@page import="org.apache.commons.codec.digest.DigestUtils"%>
 <%@page import="com.jacaranda.exception.UserException"%>
 <%@page import="com.jacaranda.model.CompanyProject"%>
 <%@page import="com.jacaranda.model.Employee"%>
@@ -35,9 +36,11 @@
 		             	<button class="btn btn-success btn-lg" id="submitButton" value="login" type="submit" name="login">Login</button>
 						<%
 						Employee employeeFind;
-							if(request.getParameter("login") != null){
+							if(request.getParameter("login") != null){ 
+								if(request.getParameter("password").equals(DigestUtils.md5Hex(request.getParameter("password")))){
 								try{
 									employeeFind = DbRepository.find(Employee.class, Integer.valueOf(request.getParameter("id")));
+									employeeFind.getPassword().equals(DigestUtils.md5Hex(request.getParameter("password")));
 								}catch(Exception e){
 									response.sendRedirect("error.jsp?msg=" + e.getMessage());
 									return;
@@ -51,7 +54,7 @@
 										<div class="errorMessage">Usuario o contraseña incorrectos</div>
 									<%
 								}
-							}
+							} ç
 						%>
 		            </div>
 		          </form>

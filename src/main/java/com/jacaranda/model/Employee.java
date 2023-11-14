@@ -37,7 +37,7 @@ public class Employee {
 	}
 
 	public Employee(String firstName, String lastName, String email, String gender, Date dateOfBirth,
-			String password, String role, Company company) {
+			String password, Company company) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -45,7 +45,7 @@ public class Employee {
 		this.gender = gender;
 		this.dateOfBirth = dateOfBirth;
 		this.password = password;
-		this.role = role;
+		this.role = "user";
 		this.company = company;
 	}
 
