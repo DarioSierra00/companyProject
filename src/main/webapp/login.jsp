@@ -35,7 +35,7 @@
 		            <div class="d-grid">
 		             	<button class="btn btn-success btn-lg" id="submitButton" value="login" type="submit" name="login">Login</button>
 						<%
-						Employee employeeFind;
+							Employee employeeFind;
 							if(request.getParameter("login") != null){ 
 								try{
 									employeeFind = DbRepository.find(Employee.class, Integer.valueOf(request.getParameter("id")));
@@ -44,16 +44,16 @@
 									return;
 								}
 								if(employeeFind != null && employeeFind.getPassword().equals(DigestUtils.md5Hex(request.getParameter("password")))){
-									session.setAttribute("rol", employeeFind.getRole());
 									session.setAttribute("employee", employeeFind);
-									response.sendRedirect("./addHoursMultipleProject.jsp");
+									response.sendRedirect("./listEmployee.jsp");
 								}else{
 									%>
 										<div class="errorMessage">Usuario o contraseña incorrectos</div>
 									<%
 								}
-							} 
+							}
 						%>
+		             	<a href="./register.jsp"><button class="btn btn-success btn-lg" id="submitButton" value="register" type="button" name="register">Register</button></a>
 		            </div>
 		          </form>
 		        </div>

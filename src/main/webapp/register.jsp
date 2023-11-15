@@ -17,11 +17,7 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="./styleSheet.css">
 </head>
-<%if(session.getAttribute("employee") == null){
-	response.sendRedirect("./login.jsp");
-}%>
 <body>
-<%@include file="nav.jsp" %>
 <%
 	ArrayList<Company> result = null;
 	try{
@@ -122,7 +118,6 @@
 					response.sendRedirect("error.jsp?msg=Error en la contraseña");
 					return;
 				}
-				
 			}
 			else{
 				%>
@@ -130,11 +125,19 @@
 				<%
 			}
 			int id = Integer.valueOf(request.getParameter("nameCompany"));
-			
-			Company c = DbRepository.find(Company.class, id);
-			Employee e = new Employee(name,lastName,email,gender,date,encriptPassword,c);
-			DbRepository.addEntity(e);
-		}
+			try{
+				Company c = DbRepository.find(Company.class, id);
+				Employee e = new Employee(name,lastName,email,gender,date,encriptPassword,c);
+				DbRepository.addEntity(e);		
+			}catch(Exception e){
+				e.getMessage();
+			}
+			%><div class="form-group row">
+			    <div class="offset-4 col-8">
+			      <a href="./login.jsp"><button name="login" type="button" class="btn btn-success">Login</button></a>
+			    </div>
+			  </div>
+		<%}
 		
 	}catch(Exception e){
 		response.sendRedirect("error.jsp?msg="+ e.getMessage());

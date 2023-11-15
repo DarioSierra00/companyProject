@@ -17,27 +17,35 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="./styleSheet.css">
 </head>
-<%if(session.getAttribute("rol") == null){
+<%if(session.getAttribute("employee") == null){
 	response.sendRedirect("./login.jsp");
+	return;
 }%>
+<%Employee emp1 = (Employee) session.getAttribute("employee"); %>
 <body>
 <%@include file="nav.jsp" %>
 <%
-	Employee e = null;
 	Employee emp = null;
 	ArrayList<Company> result = null;
-	try{
-		result = (ArrayList<Company>) DbRepository.findAll(Company.class);
-	}catch(Exception e1){
-		response.sendRedirect("error.jsp?msg="+ e1.getMessage());
-		return;
-	}
+	Boolean form = false;
+	boolean password = false;
 	
-	try{
-		emp = DbRepository.find(Employee.class, Integer.valueOf(request.getParameter("id")));
-	}catch(Exception e2){
-		response.sendRedirect("error.jsp?msg="+ e2.getMessage());
-		return;
+	if(emp1.getRole().toString().equalsIgnoreCase("Admin") || String.valueOf(emp1.getId()).equals(request.getParameter("id")) || !password){
+		
+		try{
+			result = (ArrayList<Company>) DbRepository.findAll(Company.class);
+		}catch(Exception e1){
+			response.sendRedirect("error.jsp?msg="+ e1.getMessage());
+			return;
+		}
+
+		try{
+			emp = DbRepository.find(Employee.class, Integer.valueOf(request.getParameter("id")));
+		}catch(Exception e2){
+			response.sendRedirect("error.jsp?msg="+ e2.getMessage());
+			return;
+		}
+		password = true;
 	}
 	if(request.getParameter("submit") != null){
 		try{
@@ -46,7 +54,9 @@
 			String email = request.getParameter("email");
 			String gender = request.getParameter("gender");
 			int id = 0;
-			String password = DigestUtils.md5Hex(request.getParameter("password"));
+			if(request.getParameter("password") != ""){
+				emp.setPassword(request.getParameter("password"));
+			}
 			String role = request.getParameter("role");
 			
 			try{
@@ -65,22 +75,38 @@
 			}
 			
 			Company c = DbRepository.find(Company.class,id);
-			e = new Employee(Integer.valueOf(request.getParameter("id")),name,lastName,email,gender,date,password,role,c);
+			emp = new Employee(Integer.valueOf(request.getParameter("id")),name,lastName,email,gender,date,emp1.getPassword(),role,c);
 		}catch(Exception e5){
 			response.sendRedirect("error.jsp?msg="+ e5.getMessage());
 			return;
 		}
-		DbRepository.editEntity(e);
-	}
-	try{
+		DbRepository.editEntity(emp);
 		
-	}catch(Exception e6){
-		response.sendRedirect("error.jsp?msg= Id de compañia no correcto");
-		return;
 	}
-
 %>
+
+<%if(request.getParameter("comprobar") == null && request.getParameter("submit") == null){
+	%>
 	<div class="mainWrap">
+	<form>
+	<div class="form-group row">
+    <label for="text1" class="col-4 col-form-label">Old password</label> 
+    <div class="col-8">
+      <input id="oldPass" name="oldPass" type="text" class="form-control" required>
+      <input id="id" name="id" type="text" class="form-control" value="<%=request.getParameter("id")%>" hidden>
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="offset-4 col-8">
+      <button name="comprobar" type="submit" class="btn btn-success">Comprobar</button>
+    </div>
+  </div>
+	</form>
+	</div>
+<%}
+else if(DigestUtils.md5Hex(request.getParameter("oldPass")).equals(emp.getPassword())){
+%>
+<div class="mainWrap">
 <form>
        <div class="form-group row">
     <label for="text1" class="col-4 col-form-label">Id</label> 
@@ -103,7 +129,7 @@
   <div class="form-group row">
     <label for="text3" class="col-4 col-form-label">Email</label> 
     <div class="col-8">
-      <input id="email" name="email" type="text" class="form-control" value="<%=emp.getEmail() %>">
+      <input id="email" name="email" type="text" class="form-control" value="<%=emp.getEmail() %>" readonly>
     </div>
   </div>
   <div class="form-group row">
@@ -123,7 +149,7 @@
     <div class="col-8">
     <select name="nameCompany">
     <%
-    	for(Company c : result){
+    for(Company c : result){
     		if(c.getId() == emp.getCompany().getId()){
     %>		<option value="<%=c.getId() %>" selected><%=c.getName()%></option>
     	<% 	}
@@ -143,12 +169,22 @@
       <input id="date" name="password" type="password" class="form-control" placeholder="******">
     </div>
   </div>
+  <%if(emp1.getRole().toString().equalsIgnoreCase("Admin")){%>
+	  
   <div class="form-group row">
     <label for="text5" class="col-4 col-form-label">Role</label> 
     <div class="col-8">
-      <input id="date" name="role" type="text" class="form-control" value="<%=emp.getRole()%>" readonly>
+      <input id="date" name="role" type="text" class="form-control" value="<%=emp1.getRole()%>">
     </div>
   </div>
+ <%}else{%>
+	  <div class="form-group row">
+	    <label for="text5" class="col-4 col-form-label">Role</label> 
+	    <div class="col-8">
+	      <input id="date" name="role" type="text" class="form-control" value="<%=emp1.getRole()%>" readonly>
+	    </div>
+	  </div>
+  <%}%>
   <div class="form-group row">
     <div class="offset-4 col-8">
       <button name="submit" type="submit" class="btn btn-success">Editar empleado</button>
@@ -156,5 +192,13 @@
   </div>
 </form>
 </div>
+<%}
+else{
+	%>
+	<div class="errorMessage">contraseña incorrecta</div>
+<%
+}
+
+%>
 </body>
 </html>

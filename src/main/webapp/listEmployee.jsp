@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="./styleSheet.css">
 </head>
-<%if(session.getAttribute("rol") == null){
+<%if(session.getAttribute("employee") == null){
 	response.sendRedirect("./login.jsp");
 	return;
 }%>
@@ -20,6 +20,7 @@
 <%@include file="nav.jsp" %>
 <%
 	ArrayList<Employee> result = null;
+	Employee emp = (Employee) session.getAttribute("employee");
 	try{
 		result = (ArrayList<Employee>) DbRepository.findAll(Employee.class);
 	}catch(Exception e){
@@ -47,11 +48,18 @@
 				<td><%=e.getGender() %></td>
 				<td><%=e.getDateOfBirth() %></td>
 				<td><%=e.getCompany().getName()%></td>
-				<%if(session.getAttribute("rol").toString().equalsIgnoreCase("Admin")){ %>
+				<%if(emp.getRole().toString().equalsIgnoreCase("Admin")){ %>
 				<td><a href="editEmployee.jsp?id=<%=e.getId()%>"><button type="button">Edit</button></a></td>
 				<td><a href="deleteEmployee.jsp?id=<%=e.getId()%>"><button type="button">Delete</button></a></td>
 				</tr>
-	<% }}%>
+				<% }else{
+					if(e.getId() == emp.getId()){%>
+						<td><a href="editEmployee.jsp?id=<%=e.getId()%>"><button type="button">Edit</button></a></td>
+						</tr>
+					<%}
+				}
+				
+	}%>
 </table>
 </body>
 </html>
