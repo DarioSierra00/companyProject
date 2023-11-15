@@ -34,14 +34,19 @@
 		<div class="justify-content-end">
 			<%if(session.getAttribute("employee") != null){ %>
 				<button class="btn btn-outline-danger btn-lg" id="logOut" value="logOut" type="submit" name="logOut">Log out</button>
+			<%}
+			else{%>
+				<button class="btn btn-outline-info btn-lg" id="register" value="register" type="submit" name="Register">Register</button>
 			<%}%>
 		</div>
 	</form>
      <%if(request.getParameter("logOut") != null){
-   	  	session.removeAttribute("employee");
+   	  	session.invalidate();
 		response.sendRedirect("./login.jsp");
 		return;
-     }%>
+     }	
+     %>
+     
   </div>
 </nav>
 </body>

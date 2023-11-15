@@ -6,6 +6,8 @@ import java.util.Objects;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
+import com.jacaranda.repository.EmployeeRepository;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -80,6 +82,14 @@ public class Employee {
 
 	public int getId() {
 		return id;
+	}
+
+	public List<EmployeeProject> getEmployeeProject() throws Exception {
+		return EmployeeRepository.getEmployeeProjects(this.id);
+	}
+
+	public void setEmployeeProject(List<EmployeeProject> employeeProject) {
+		this.employeeProject = employeeProject;
 	}
 
 	public void setId(int id) {

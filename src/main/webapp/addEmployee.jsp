@@ -65,17 +65,16 @@
   </div>
   <div class="form-group row">
     <label for="text5" class="col-4 col-form-label">Company</label> 
-        <div class="col-8">
-    
-    <select name="nameCompany">
-    <%
-    	for(Company c : result){
-    	
-    %>		<option name="company" value="<%=c.getId()%>"><%=c.getName()%></option>
-    	<% }
-    %>
-    	
-    </select>
+    <div class="col-8">
+	    <select name="nameCompany" class="form-control">
+	    <%
+	    	for(Company c : result){
+	    	
+	    %>		<option name="company" value="<%=c.getId()%>"><%=c.getName()%></option>
+	    	<% }
+	    %>
+	    	
+	    </select>
     </div>
   </div> 
   	<div class="form-group row">
